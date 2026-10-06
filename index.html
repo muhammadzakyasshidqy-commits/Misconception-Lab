@@ -1,0 +1,88 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misconception Lab</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#0d1117;color:#e6edf3;margin:0}
+main{max-width:980px;margin:auto;padding:32px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:16px;padding:20px;margin:14px 0}
+h1{font-size:42px;margin:0 0 8px}
+input,select,button{padding:11px;border-radius:10px;border:1px solid #30363d;background:#0d1117;color:#e6edf3}
+button{background:#238636;font-weight:700;cursor:pointer}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.node{display:inline-block;padding:8px 10px;border-radius:999px;background:#21262d;margin:4px}
+.bad{border:1px solid #f85149}.mid{border:1px solid #d29922}.good{border:1px solid #3fb950}
+.small{color:#8b949e;font-size:13px}
+#history div{padding:8px 0;border-bottom:1px solid #21262d}
+</style>
+</head>
+<body>
+<main>
+<h1>Misconception Lab</h1>
+<p>Instead of tracking only right/wrong answers, this prototype tracks the hidden reason a learner failed and chooses the next question to discriminate between competing misconceptions.</p>
+<div class="card">
+<h2>Record an error</h2>
+<div class="row">
+<select id="topic">
+<option>Probability</option>
+<option>Algebra</option>
+<option>Reading inference</option>
+</select>
+<select id="cause">
+<option value="concept">Wrong concept selected</option>
+<option value="procedure">Procedure error</option>
+<option value="attention">Attention / reading error</option>
+<option value="confidence">Guessed with low confidence</option>
+</select>
+<input id="confidence" type="number" min="0" max="100" value="50" aria-label="confidence">
+<button id="analyze">Analyze</button>
+<button id="export">Export JSON</button>
+</div>
+<p class="small">Confidence is 0–100%. The engine converts each error into evidence, not just a score penalty.</p>
+</div>
+<div class="card"><h2>Misconception graph</h2><div id="graph"></div></div>
+<div class="card"><h2>Next best test</h2><div id="next">Add an error first.</div></div>
+<div class="card"><h2>Evidence history</h2><div id="history"></div></div>
+<script src="core.js"></script>
+<script>
+let state=MisconceptionEngine.empty();
+try{
+ const saved=JSON.parse(localStorage.getItem("misconception-lab")||"null");
+ if(saved&&saved.weights&&saved.events)state=saved;
+}catch(e){}
+function addError(){
+ const topic=document.getElementById("topic").value;
+ const cause=document.getElementById("cause").value;
+ const confidence=document.getElementById("confidence").value;
+ MisconceptionEngine.record(state,topic,cause,confidence);
+ localStorage.setItem("misconception-lab",JSON.stringify(state));
+ render();
+}
+function render(){
+ const labels=MisconceptionEngine.LABELS;
+ const max=Math.max(1,...Object.values(state.weights));
+ document.getElementById("graph").innerHTML=Object.entries(state.weights).map(function(kv){
+   const k=kv[0],v=kv[1],ratio=v/max;
+   const cls=ratio>0.66?"bad":ratio>0.33?"mid":"good";
+   return '<span class="node '+cls+'">'+labels[k]+': '+v.toFixed(2)+'</span>';
+ }).join("");
+ if(state.events.length){
+   const rec=MisconceptionEngine.recommendation(state);
+   document.getElementById("next").innerHTML='<b>'+rec.label+'</b><p>'+rec.test+'</p><span class="small">Evidence share '+Math.round(rec.posteriorShare*100)+'%</span>';
+ }else document.getElementById("next").textContent="Add an error first.";
+ document.getElementById("history").innerHTML=state.events.map(function(e){
+   return '<div><b>'+e.topic+'</b> — '+labels[e.cause]+' — confidence '+e.confidence+'% — evidence +'+e.evidence.toFixed(2)+'</div>';
+ }).join("")||'<span class="small">No evidence yet.</span>';
+}
+document.getElementById("analyze").addEventListener("click",addError);
+document.getElementById("export").addEventListener("click",function(){
+ const blob=new Blob([MisconceptionEngine.serialize(state)],{type:"application/json"});
+ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="misconception-lab.json"; a.click(); URL.revokeObjectURL(a.href);
+});
+render();
+</script>
+</main>
+</body>
+</html>

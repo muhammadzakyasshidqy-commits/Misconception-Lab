@@ -1,0 +1,15 @@
+﻿const assert=require("assert");
+const E=require("./core.js");
+let s=E.empty();
+assert.strictEqual(E.evidence(100),0.5);
+assert.strictEqual(E.evidence(0),1.5);
+s=E.record(s,"Probability","concept",20,"t1");
+s=E.record(s,"Probability","concept",40,"t2");
+s=E.record(s,"Probability","procedure",90,"t3");
+const r=E.recommendation(s);
+assert.strictEqual(r.cause,"concept");
+assert.ok(r.posteriorShare>0.7);
+assert.strictEqual(s.events.length,3);
+const round=JSON.parse(E.serialize(s));
+assert.strictEqual(round.schema,1);
+console.log(JSON.stringify({ok:true,recommendation:r,weights:s.weights,events:s.events.length}));
