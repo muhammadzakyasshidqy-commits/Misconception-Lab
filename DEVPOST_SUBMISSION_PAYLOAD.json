@@ -1,0 +1,20 @@
+﻿{
+    "title":  "Misconception Lab",
+    "tagline":  "Turn mistakes into testable hypotheses.",
+    "track":  "Coding",
+    "category":  "Computer Science + AI (Technology)",
+    "about":  "Most learning software collapses every wrong answer into the same signal. But two students can miss the same question for very different reasons: selecting the wrong concept, applying the right concept incorrectly, missing an important constraint, or guessing with poor confidence calibration.\n\nMisconception Lab treats each mistake as evidence about an underlying failure mode. The learner records the topic, suspected cause, and confidence. A transparent evidence engine updates a misconception profile and chooses the next discriminating test designed to separate competing explanations instead of giving random extra practice.\n\nThe prototype focuses on four interpretable causes: concept selection, procedure, attention/reading, and confidence calibration. Confidence changes the evidence weight; the interface makes the current profile visible; and the next recommended test is chosen to diagnose the bottleneck. Evidence persists locally and can be exported as JSON.\n\nWhat makes it different is that a wrong answer does not become only a score penalty. It becomes a hypothesis that can be tested.\n\nTechnology: vanilla HTML/CSS/JavaScript, a standalone JavaScript inference core, localStorage persistence, JSON export, deterministic Node.js tests, and Playwright end-to-end verification.",
+    "repo_url":  "https://github.com/muhammadzakyasshidqy-commits/misconception-lab-eurekadev-2026",
+    "live_demo_url":  "https://muhammadzakyasshidqy-commits.github.io/misconception-lab-eurekadev-2026/",
+    "video_demo_url":  "https://muhammadzakyasshidqy-commits.github.io/misconception-lab-eurekadev-2026/demo.html",
+    "video_direct_url":  "https://muhammadzakyasshidqy-commits.github.io/misconception-lab-eurekadev-2026/Misconception_Lab_EurekaDev_2026_Demo.mp4",
+    "team_size":  1,
+    "technologies":  [
+                         "HTML",
+                         "CSS",
+                         "JavaScript",
+                         "Node.js",
+                         "Playwright",
+                         "GitHub Pages"
+                     ]
+}
