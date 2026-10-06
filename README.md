@@ -21,3 +21,7 @@ Open index.html in a browser.
 
 ## Competition status
 Built locally for EurekaDev 2026. Nothing has been published or submitted externally.
+
+## Public links
+- Live prototype: https://muhammadzakyasshidqy-commits.github.io/misconception-lab-eurekadev-2026/
+- Demo video: https://muhammadzakyasshidqy-commits.github.io/misconception-lab-eurekadev-2026/demo.html
